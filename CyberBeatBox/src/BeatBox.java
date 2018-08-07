@@ -131,21 +131,35 @@ public class BeatBox {
 		} catch (Exception e) {e.printStackTrace();}
 	}//buildTrackAndStart end
 	
-	private MidiEvent makeEvent(int i, int j, int k, int l, int m) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private MidiEvent makeEvent(int comd, int chan, int one, int two, int tick) {
+		MidiEvent event = null;
+		try {
+			ShortMessage a = new ShortMessage();
+			a.setMessage(comd,chan,one,two);
+			event = new MidiEvent(a, tick);
+			
+		} catch (Exception e) {e.printStackTrace();}
+		return event;
+	}//makeEvent end
 
 	private void makeTracks(int[] trackList) {
-		// TODO Auto-generated method stub
 		
-	}
+		for (int i=0; i<16; i++) {
+			int key = trackList[i];
+			
+			if(key != 0) {
+				track.add(makeEvent(144,9,key,100,i));
+				track.add(makeEvent(128,9,key,100,i+1));
+			}
+		}//end loop
+		
+	}//end makeTracks()
 
 	public class MyStartListener implements  ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			buildTrackAndStart();
 			
 		}
 		
@@ -155,30 +169,32 @@ public class BeatBox {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			sequencer.stop();
 			
 		}
 		
-	}
+	}//inner class end
 	
 	public class MyUpTempoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			float tempoFactor = sequencer.getTempoFactor();
+			sequencer.setTempoFactor((float)(tempoFactor * 1.03));
 			
 		}
 		
-	}
+	}//inner class end
 	
 	public class MyDownTempoListener implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			float tempoFactor = sequencer.getTempoFactor();
+			sequencer.setTempoFactor((float)(tempoFactor * .97));
 			
 		}
 		
-	}
+	}//inner class end
 
 }//class end
